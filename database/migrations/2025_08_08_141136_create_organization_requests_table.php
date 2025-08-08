@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('organization_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('organization_name');
-            $table->text('organization_description');
-            $table->foreignId('requested_by')->constrained('users')->onDelete('cascade');
+            $table->string('name');
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });

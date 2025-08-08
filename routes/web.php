@@ -6,9 +6,14 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Auth\CustomRegisterController;
+use App\Http\Controllers\HomeController;
 
 // Homepage
-Route::get('/', fn () => view('homepage'))->name('homepage');
+Route::get('/', [HomeController::class, 'index'])->name('homepage');
+
+Route::get('/organisation-request', [HomeController::class, 'organisationRequest'])->name('organisation-request');
+
+Route::post('/organisation-request', [HomeController::class, 'organisationRequestSubmit'])->name('organisation-request.submit');
 
 // Auth routes
 Auth::routes();
@@ -42,6 +47,7 @@ Route::get('/dashboard', function () {
 Route::middleware(['auth', 'role:1'])->prefix('dashboard/superadmin')->name('dashboard.superadmin.')->group(function () {
     Route::get('/', [DashboardController::class, 'superAdmin'])->name('index');
     Route::get('/organisations', [SuperAdminController::class, 'organisations'])->name('organisations');
+    Route::get('/organisations/requests', [SuperAdminController::class, 'organisationsRequests'])->name('organisations.requests');
     Route::get('/users', [SuperAdminController::class, 'users'])->name('users');
 });
 
@@ -64,3 +70,4 @@ Route::middleware(['auth', 'role:5'])->prefix('dashboard/neighborhood')->name('d
 Route::middleware(['auth', 'role:6'])->prefix('dashboard/user')->name('dashboard.user.')->group(function () {
     Route::get('/', [DashboardController::class, 'userDashboard'])->name('index');
 });
+

@@ -12,6 +12,13 @@ class Organization extends Model
         'slug',
         'logo',
         'colors',
+        'type',
+        'description',
+        'address',
+        'phone',
+        'email',
+        'important_links',
+        'user_id',
     ];
 
     public function branches()

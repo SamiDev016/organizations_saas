@@ -7,9 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class OrganizationRequest extends Model
 {
     protected $fillable = [
-        'organization_name',
-        'organization_description',
-        'requested_by',
+        'name',
+        'address',
+        'phone',
+        'email',
+        'user_id',
         'status',
     ];
 
