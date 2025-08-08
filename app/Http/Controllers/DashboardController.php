@@ -30,4 +30,9 @@ class DashboardController extends Controller
     {
         return view('dashboard.neighborhood.dashboard');
     }
+
+    public function userDashboard()
+    {
+        return view('dashboard.user.dashboard');
+    }
 }

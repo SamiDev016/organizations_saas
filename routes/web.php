@@ -3,31 +3,42 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Auth;
 
 Route::get('/', function () {
     return view('homepage');
 });
 
+Auth::routes();
 
-// Role-based dashboard routes
-Route::middleware(['auth', 'role:superadmin'])->group(function () {
-    Route::get('/superadmin/dashboard', [DashboardController::class, 'superAdmin'])->name('superadmin.dashboard');
+Route::get('/dashboard', function () {
+    $user = auth()->user();
+
+    if (!$user) {
+        return redirect('/login');
+    }
+
+    switch ($user->role_id) {
+        case 1:
+            return redirect()->route('dashboard.superadmin');
+        case 2:
+            return redirect()->route('dashboard.national');
+        case 3:
+            return redirect()->route('dashboard.wilaya');
+        case 4:
+            return redirect()->route('dashboard.commune');
+        case 5:
+            return redirect()->route('dashboard.neighborhood');
+        default:
+            return redirect()->route('dashboard.user');
+    }
+})->middleware('auth')->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard/superadmin', [DashboardController::class, 'superAdmin'])->name('dashboard.superadmin');
+    Route::get('/dashboard/national', [DashboardController::class, 'nationalAdmin'])->name('dashboard.national');
+    Route::get('/dashboard/wilaya', [DashboardController::class, 'wilayaAdmin'])->name('dashboard.wilaya');
+    Route::get('/dashboard/commune', [DashboardController::class, 'communeAdmin'])->name('dashboard.commune');
+    Route::get('/dashboard/neighborhood', [DashboardController::class, 'neighborhoodAdmin'])->name('dashboard.neighborhood');
+    Route::get('/dashboard/user', [DashboardController::class, 'userDashboard'])->name('dashboard.user');
 });
-
-Route::middleware(['auth', 'role:nationaladmin'])->group(function () {
-    Route::get('/national/dashboard', [DashboardController::class, 'nationalAdmin'])->name('national.dashboard');
-});
-
-Route::middleware(['auth', 'role:wilayaadmin'])->group(function () {
-    Route::get('/wilaya/dashboard', [DashboardController::class, 'wilayaAdmin'])->name('wilaya.dashboard');
-});
-
-Route::middleware(['auth', 'role:communeadmin'])->group(function () {
-    Route::get('/commune/dashboard', [DashboardController::class, 'communeAdmin'])->name('commune.dashboard');
-});
-
-Route::middleware(['auth', 'role:neighborhoodadmin'])->group(function () {
-    Route::get('/neighborhood/dashboard', [DashboardController::class, 'neighborhoodAdmin'])->name('neighborhood.dashboard');
-});
-
-require __DIR__.'/auth.php';
