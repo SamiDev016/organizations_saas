@@ -1,56 +1,66 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\Auth\CustomLoginController;
+use App\Http\Controllers\Auth\CustomRegisterController;
 
-Route::get('/', function () {
-    return view('homepage');
-})->name('homepage');
+// Homepage
+Route::get('/', fn () => view('homepage'))->name('homepage');
 
+// Auth routes
 Auth::routes();
+
+Route::get('login', [CustomLoginController::class, 'showLoginForm'])->name('login');
+Route::post('login', [CustomLoginController::class, 'login'])->name('login.custom');
+
+Route::get('register', [CustomRegisterController::class, 'showRegistrationForm'])->name('register');
+Route::post('register', [CustomRegisterController::class, 'register'])->name('register.custom');
+
+Route::post('logout', [DashboardController::class, 'logout'])->name('logout');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    if (!$user) {
-        return redirect('/login');
-    }
+    if (!$user) return redirect('/login');
 
-    switch ($user->role_id) {
-        case 1:
-            return redirect()->route('dashboard.superadmin');
-        case 2:
-            return redirect()->route('dashboard.national');
-        case 3:
-            return redirect()->route('dashboard.wilaya');
-        case 4:
-            return redirect()->route('dashboard.commune');
-        case 5:
-            return redirect()->route('dashboard.neighborhood');
-        default:
-            return redirect()->route('dashboard.user');
-    }
+    return match ($user->role_id) {
+        1 => redirect()->route('dashboard.superadmin.index'),
+        2 => redirect()->route('dashboard.national.index'),
+        3 => redirect()->route('dashboard.wilaya.index'),
+        4 => redirect()->route('dashboard.commune.index'),
+        5 => redirect()->route('dashboard.neighborhood.index'),
+        default => redirect()->route('dashboard.user.index'),
+    };
 })->middleware('auth')->name('dashboard');
 
-Route::middleware(['auth', 'role:1'])->get('/dashboard/superadmin', [DashboardController::class, 'superAdmin'])->name('dashboard.superadmin');
-Route::middleware(['auth', 'role:2'])->get('/dashboard/national', [DashboardController::class, 'nationalAdmin'])->name('dashboard.national');
-Route::middleware(['auth', 'role:3'])->get('/dashboard/wilaya', [DashboardController::class, 'wilayaAdmin'])->name('dashboard.wilaya');
-Route::middleware(['auth', 'role:4'])->get('/dashboard/commune', [DashboardController::class, 'communeAdmin'])->name('dashboard.commune');
-Route::middleware(['auth', 'role:5'])->get('/dashboard/neighborhood', [DashboardController::class, 'neighborhoodAdmin'])->name('dashboard.neighborhood');
-Route::middleware(['auth', 'role:6'])->get('/dashboard/user', [DashboardController::class, 'userDashboard'])->name('dashboard.user');
 
 
 
-Route::get('login', [\App\Http\Controllers\Auth\CustomLoginController::class, 'showLoginForm'])->name('login');
-Route::post('login', [\App\Http\Controllers\Auth\CustomLoginController::class, 'login'])->name('login.custom');
+Route::middleware(['auth', 'role:1'])->prefix('dashboard/superadmin')->name('dashboard.superadmin.')->group(function () {
+    Route::get('/', [DashboardController::class, 'superAdmin'])->name('index');
+    Route::get('/organisations', [SuperAdminController::class, 'organisations'])->name('organisations');
+    Route::get('/users', [SuperAdminController::class, 'users'])->name('users');
+});
 
+Route::middleware(['auth', 'role:2'])->prefix('dashboard/national')->name('dashboard.national.')->group(function () {
+    Route::get('/', [DashboardController::class, 'nationalAdmin'])->name('index');
+});
 
-Route::get('register', [\App\Http\Controllers\Auth\CustomRegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('register', [\App\Http\Controllers\Auth\CustomRegisterController::class, 'register'])->name('register.custom');
+Route::middleware(['auth', 'role:3'])->prefix('dashboard/wilaya')->name('dashboard.wilaya.')->group(function () {
+    Route::get('/', [DashboardController::class, 'wilayaAdmin'])->name('index');
+});
 
-Route::post('logout', [DashboardController::class, 'logout'])
-    ->name('logout');
+Route::middleware(['auth', 'role:4'])->prefix('dashboard/commune')->name('dashboard.commune.')->group(function () {
+    Route::get('/', [DashboardController::class, 'communeAdmin'])->name('index');
+});
 
+Route::middleware(['auth', 'role:5'])->prefix('dashboard/neighborhood')->name('dashboard.neighborhood.')->group(function () {
+    Route::get('/', [DashboardController::class, 'neighborhoodAdmin'])->name('index');
+});
+
+Route::middleware(['auth', 'role:6'])->prefix('dashboard/user')->name('dashboard.user.')->group(function () {
+    Route::get('/', [DashboardController::class, 'userDashboard'])->name('index');
+});
