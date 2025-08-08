@@ -42,13 +42,15 @@ Route::middleware(['auth', 'role:4'])->get('/dashboard/commune', [DashboardContr
 Route::middleware(['auth', 'role:5'])->get('/dashboard/neighborhood', [DashboardController::class, 'neighborhoodAdmin'])->name('dashboard.neighborhood');
 Route::middleware(['auth', 'role:6'])->get('/dashboard/user', [DashboardController::class, 'userDashboard'])->name('dashboard.user');
 
-Route::post('logout', [DashboardController::class, 'logout'])
-    ->name('logout');
 
 
-    
 Route::get('login', [\App\Http\Controllers\Auth\CustomLoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [\App\Http\Controllers\Auth\CustomLoginController::class, 'login'])->name('login.custom');
 
+
 Route::get('register', [\App\Http\Controllers\Auth\CustomRegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('register', [\App\Http\Controllers\Auth\CustomRegisterController::class, 'register'])->name('register.custom');
+
+Route::post('logout', [DashboardController::class, 'logout'])
+    ->name('logout');
+

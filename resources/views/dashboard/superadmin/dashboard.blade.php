@@ -1,2 +1,7 @@
+@extends('dashboard.layouts.app')
 
-<h1>Super Admin Dashboard</h1>
+@section('content')
+<div class="flex flex-col">
+    <h1>Super Admin Dashboard</h1>
+    </div>
+@endsection
