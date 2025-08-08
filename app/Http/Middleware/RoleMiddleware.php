@@ -15,12 +15,14 @@ class RoleMiddleware
      */
     public function handle(Request $request, Closure $next, string $role): Response
     {
-        if (!auth()->check()) return redirect('/login');
+        if (!auth()->check()) {
+            return redirect('/login');
+        }
 
-        $roles = explode(',', $role);
+        $allowedRoles = explode(',', $role);
 
-        if (!in_array(auth()->user()->role->name, $roles)) {
-            abort(403);
+        if (!in_array(auth()->user()->role_id, $allowedRoles)) {
+            return redirect('/dashboard');
         }
 
         return $next($request);

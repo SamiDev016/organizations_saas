@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'name' => 'National Admin',
+            'name' => 'Super Admin',
             'email' => 'admin@gmail.com',
             'password' => '12345678',
             'role_id' => Role::where('name', 'super_admin')->first()->id,
