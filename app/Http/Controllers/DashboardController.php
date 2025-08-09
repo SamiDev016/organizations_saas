@@ -14,7 +14,10 @@ class DashboardController extends Controller
 
     public function nationalAdmin()
     {
-        return view('dashboard.national.dashboard');
+        $user = Auth::user();
+        $organistaion = $user->organization;
+        $branch = $user->branch;
+        return view('dashboard.national.dashboard', compact('branch','organistaion','user'));
     }
 
     public function wilayaAdmin()

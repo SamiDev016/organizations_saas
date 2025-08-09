@@ -23,6 +23,11 @@ class HomeController extends Controller
         if (!Auth::check()) {
             return redirect()->route('login');
         }
+
+        if(Auth::user()->role_id != 6) {
+            return redirect()->route('organisation-request')->with('error', 'You Must Be Normal User To Request An Organization');
+        }
+
         $request->validate([
             'name' => 'required',
             'address' => 'required',

@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->string('logo')->nullable();
-            $table->string('colors')->nullable();
+            $table->string('color1')->nullable();
+            $table->string('color2')->nullable();
             $table->enum('type',['free','premium'])->default('free');
             $table->text('description')->nullable();
             $table->string('address')->nullable();

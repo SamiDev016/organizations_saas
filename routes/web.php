@@ -7,6 +7,7 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\Auth\CustomLoginController;
 use App\Http\Controllers\Auth\CustomRegisterController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NationalAdminController;
 
 // Homepage
 Route::get('/', [HomeController::class, 'index'])->name('homepage');
@@ -48,11 +49,17 @@ Route::middleware(['auth', 'role:1'])->prefix('dashboard/superadmin')->name('das
     Route::get('/', [DashboardController::class, 'superAdmin'])->name('index');
     Route::get('/organisations', [SuperAdminController::class, 'organisations'])->name('organisations');
     Route::get('/organisations/requests', [SuperAdminController::class, 'organisationsRequests'])->name('organisations.requests');
+    Route::post('/organisations/requests/approve/{id}', [SuperAdminController::class, 'organisationsRequestsApprove'])->name('organisations.requests.approve');
+    Route::post('/organisations/requests/reject/{id}', [SuperAdminController::class, 'organisationsRequestsReject'])->name('organisations.requests.reject');
+    Route::get('/organisations/{id}', [SuperAdminController::class, 'organisationsShow'])->name('organisations.show');
+    Route::get('/organisations/{id}/edit', [SuperAdminController::class, 'organisationsEdit'])->name('organisations.edit');
+    Route::put('/organisations/{id}/update', [SuperAdminController::class, 'organisationsUpdate'])->name('organisations.update');
     Route::get('/users', [SuperAdminController::class, 'users'])->name('users');
 });
 
 Route::middleware(['auth', 'role:2'])->prefix('dashboard/national')->name('dashboard.national.')->group(function () {
     Route::get('/', [DashboardController::class, 'nationalAdmin'])->name('index');
+    Route::get('/branches', [NationalAdminController::class, 'branches'])->name('branches');
 });
 
 Route::middleware(['auth', 'role:3'])->prefix('dashboard/wilaya')->name('dashboard.wilaya.')->group(function () {

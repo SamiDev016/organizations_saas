@@ -1,6 +1,9 @@
 @extends('dashboard.layouts.app')
 
 @section('content')
+@error('error')
+    <div class="text-red-500">{{ $message }}</div>
+@enderror
 <div class="p-6">
     <h1 class="text-2xl font-bold mb-6">Organisations Requests</h1>
 
@@ -30,14 +33,23 @@
                             </span>
                         </td>
                         <td class="px-6 py-4 text-center border-b">
-                            <a href="#" 
+                            <!-- <a href="#" 
                                class="inline-block bg-blue-500 hover:bg-blue-600 text-white text-xs px-4 py-2 rounded mr-2">
                                Show Details
-                            </a>
-                            <a href="#" 
-                               class="inline-block bg-yellow-500 hover:bg-yellow-600 text-white text-xs px-4 py-2 rounded">
-                               Edit
-                            </a>
+                            </a> -->
+                            <form action="{{ route('dashboard.superadmin.organisations.requests.approve', $request->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="text-blue-500 hover:text-blue-600">
+                                    Approve
+                                </button>
+                            </form>
+                            
+                            <!-- <form action="{{ route('dashboard.superadmin.organisations.requests.reject', $request->id) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="inline-block bg-red-500 hover:bg-red-600 text-white text-xs px-4 py-2 rounded">
+                                    Reject
+                                </button>
+                            </form> -->
                         </td>
                     </tr>
                 @endforeach

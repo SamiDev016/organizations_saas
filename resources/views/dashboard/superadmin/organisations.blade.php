@@ -13,6 +13,7 @@
 <table class="min-w-full bg-white border border-gray-200 shadow-md rounded-lg overflow-hidden">
     <thead class="bg-gray-100 border-b border-gray-200">
         <tr>
+            <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Logo</th>
             <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Name</th>
             <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Type</th>
             <th class="px-6 py-3 text-left text-sm font-medium text-gray-600">Email</th>
@@ -22,18 +23,27 @@
     <tbody class="divide-y divide-gray-200">
         @foreach($organisations as $organisation)
             <tr>
+                <td class="px-6 py-4 text-sm text-gray-800">
+                    @if($organisation->logo)
+                        <img src="{{ asset('images/organisations_logo/'.$organisation->logo) }}" alt="{{ $organisation->name }}" 
+                            class="w-12 h-12 rounded-full border-2 border-gray-200 object-cover">
+                    @else
+                        <div class="w-12 h-12 rounded-full border-2 border-gray-200 flex items-center justify-center bg-gray-200 text-gray-500">
+                            No Logo
+                        </div>
+                    @endif
+                </td>
                 <td class="px-6 py-4 text-sm text-gray-800">{{ $organisation->name }}</td>
                 <td class="px-6 py-4 text-sm text-gray-800">{{ ucfirst($organisation->type) }}</td>
                 <td class="px-6 py-4 text-sm text-gray-800">{{ $organisation->email }}</td>
                 <td class="px-6 py-4 text-right space-x-2">
-                    <!-- Show Details -->
-                    <a href="{{ route('organisations.show', $organisation->id) }}" 
+                    
+                    <a href="{{ route('dashboard.superadmin.organisations.show', $organisation->id) }}" 
                         class="px-3 py-1 bg-blue-500 hover:bg-blue-600 text-white text-sm rounded-lg shadow">
-                        Show Details
+                        Details
                     </a>
                     
-                    <!-- Edit -->
-                    <a href="{{ route('organisations.edit', $organisation->id) }}" 
+                    <a href="{{ route('dashboard.superadmin.organisations.edit', $organisation->id) }}" 
                         class="px-3 py-1 bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg shadow">
                         Edit
                     </a>

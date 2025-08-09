@@ -23,6 +23,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'organization_id',
+        'branch_id',
     ];
 
     /**
@@ -50,16 +52,16 @@ class User extends Authenticatable
 
     public function organization()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
 
     public function branch()
     {
-        return $this->belongsTo(Branch::class);
+        return $this->belongsTo(Branch::class, 'branch_id', 'id');
     }
 
     public function role()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id', 'id');
     }
 }

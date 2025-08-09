@@ -15,9 +15,9 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
-        <div class="flex flex-col min-h-screen w-full">
+        <div class="flex flex-col h-full w-full">
             @include('dashboard.layouts.header')
-            <div class="flex flex-row h-screen">
+            <div class="flex flex-row h-full">
                 @include('dashboard.layouts.sidebar')
                 <main class="flex-1 w-4/5">
                     @yield('content')
